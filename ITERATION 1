@@ -3,8 +3,8 @@
 # SPECIFICATIONS: ||| 1. Login and Sign Up ||| 2. Menu ||| 3. Billing |||
 #Introduction to program
 #Offers choice to log in or create account.
-#Checks for correct username and password in index data (list) 
-#Checks for age for new users and saves username and password in a list.
+#Checks for correct Student ID and password in index data (list) 
+#Checks for age for new users and saves Student ID and password in a list.
 #Displays Café menu and asks for orders – items, quantity.
 #Displays invoice with details of items, quantity, price and total.
 
@@ -12,7 +12,7 @@
 
 #VARIABLES
 #Login/Signup Variables
-username = []
+student_id = []
 password = []
 user = []
 age = []
@@ -20,10 +20,10 @@ users = []
 current_user = []
 
 #Menu Variables
-hot_drinks = {"Hot Chocolate": 4, "Latte": 4, "Mochaccino": 4, "Cuppaccino": 4, "Long Black": 4, "Flat White": 4, "- GST per items above":"0.6\n\n"}
-cold_drinks ={"Milkshake": 5, "Thickshake": 5, "IcedCoffee": 5, "IcedTea": 5, "IcedChocolate": 5, "SoftDrinks": 5,"- GST per item above": "0.75\n\n"}
+hot_drinks = {"Hot chocolate": 4, "Latte": 4, "Mochaccino": 4, "Cuppaccino": 4, "Long black": 4, "Flat white": 4, "- GST per items above":"0.6\n\n"}
+cold_drinks ={"Milkshake": 5, "Thickshake": 5, "Icedcoffee": 5, "Icedtea": 5, "Icedchocolate": 5, "Softdrinks": 5,"- GST per item above": "0.75\n\n"}
 snacks ={"Donut": 3.5, "Hashbrown": 3.5,"Sandwiches":3.5,"Chips":3.5,"Salad":3.5,"- GST per item above": "0.53\n\n"}
-lunch = {"Hot Dog": 7.5, "Burgers":7.5,"Wraps":5,"Steam Buns":6,"Sushi":7,"Noodles":5,"Pies":4}
+lunch = {"Hot dog": 7.5, "Burgers":7.5,"Wraps":5,"Steam buns":6,"Sushi":7,"Noodles":5,"Pies":4}
 menu = {}
 menu.update(hot_drinks)
 menu.update(cold_drinks)
@@ -47,52 +47,61 @@ quantity=[]
 #---Adding Orders--#
 def add_order(user, order, orders):
     orders.append((user, order))
-    #Adds the username password and age of user and adds the item they chose
+    #Adds the student ID password and age of user and adds the item they chose
     #Orders is added the the variable orders
 
 #---Login in--#
 def login(users):
-    #Asks user for username and password
-    username = input("Enter username: ")
+    #Asks user for Student ID and password
+    student_id = input("Enter Student ID: ")
     password = input("Enter password: ")
 
 
-    #for a user within the variable users
+    #if a user is already a member
     for user in users:
 
-        #If username and password is within user, then this will continue
-        if user[0] == username and user[1] == password:
-            print(f"Welcome back, {username}!")
+        #If student ID and password is correct for the user
+        if user[0] == student_id and user[1] == password:
+            print(f"Welcome back, {student_id}!")
             return user
 
 
-    #If user is not in users, then it will return to the run function
-    print("Invalid username or password.")
+    #If user is not a member
+    print("Invalid Student ID or password.")
     return None
+
 
 #---Sign Up--#
 def signup(users):
-    #Asks user to enter a username and password and age
-    username = input("Enter username: ")
-    password = input("Enter password: ")
-    age = int(input("Enter your age: "))
+    try:
+        #Asks user to enter a Student ID, Password and Age
+        student_id = input("Enter Student ID: ")
+        password = input("Enter password: ")
+        age = int(input("Enter your age: "))
 
-    #If they are not an eligible then it will return to the run function
-    if age < 13:
-        print("Sorry, you must be 13 or older to create an account.")
-        return None
-    
-    elif age > 20:
-        print("Sorry you must b a BDSC Student therefore you cannot be 20 years or older")
-        return None
-    
+        #If they are not an eligible
+        if age < 13:
+            print("Sorry, you must be 13 or older to create an account.")
+            return None
+        
+        #The user cannot be over 20 years old as they must be a school student for BDSC (yr 9 - yr13)
+        elif age > 18:
+            print("Sorry you must be a BDSC Student therefore you cannot be 20 years or older")
+            return None
+        
 
-    #if they are over 13 and under 21
-    #Adds the username, password and age to the variable users, then goes to run function
-    user = (username, password, age)
-    users.append(user)
-    print(f"Account created for {username}!")
-    return user
+        #if they are over 13 and under 21
+        #Adds the Student ID, password and age to the variable users.
+        user = (student_id, password, age)
+        users.append(user)
+        print(f"Account created for {student_id}!")
+        return user
+    
+    #If There is ValueError Present Within The  signup function
+    except ValueError:
+        print("Please enter an appropriate answer for an age \n\n")
+        signup(users)
+
 
 
 #--Display Menu--#
@@ -139,35 +148,42 @@ def display_menu(menu):
 
 #--Order Food--#
 def order_food(current_user, menu, orders):
-    global order
+    try:
+        global order
 
-    while True:
-        # Asks user for item they woudl like to purchase
-        item = input("Enter item name (or 'done' to finish): ")
-
-
-        #If the user inputs done, then it closes this and returns them to the run function
-        if item == "done":
-            break
-
-        #If user inputs an item that is not in the list, then it returns them to order food function
-        if item not in menu:
-            print("Sorry, we don't have that item.")
-            continue
+        while True:
+            # Asks user for item they would like to purchase
+            item = input("Enter item name (or 'done' to finish): ").capitalize()
 
 
-        # Asks user for quantity of item they would like to purchase, and then adds the item to the order variable
-        quantity = int(input("Enter quantity: "))
-        order[item] = order.get(item, 0) + quantity
+            #If the user inputs done, then it closes this and returns them to the run function
+            if item == "Done":
+                break
+
+            #If user inputs an item that is not in the list, then it returns them to order food function
+            if item not in menu:
+                print("Sorry, we don't have that item.")
+                continue
 
 
-    #Goes to the add order function
-    add_order(current_user, order, orders)
-    print("Order placed successfully!")
+            # Asks user for quantity of item they would like to purchase, and then adds the item to the order variable
+            quantity = int(input("Enter quantity: "))
+            order[item] = order.get(item, 0) + quantity
+
+
+        #Goes to the add order function
+        add_order(current_user, order, orders)
+        print("Order placed successfully!")
+
+    #If ValueError is found within order_food function
+    except ValueError:
+        print("Please enter an appropriate answer for an quantity \n\n")
+        order_food(current_user, menu, orders)
+        
 
 #--View Order--#
 def view_orders(current_user, menu, orders):
-    # User order is item and quantity for a current user.
+    # User order is item and quantity for the current user.
     user_orders = [order for user, order in orders if user == current_user]
 
     #if not in user order, then it returns to run function
@@ -177,7 +193,7 @@ def view_orders(current_user, menu, orders):
     
     print("\nYour Orders:")
 
-    #prints for number of orders
+    #prints out the number of order
     for i, order in enumerate(user_orders, 1):
         print(f"\nOrder {i}:")
 
@@ -219,11 +235,11 @@ def run():
 
         #Ordering food option
         elif choice == "4":
-            #If the current user is none, then it will say please login/signup
+            #If their is no current user, then it will say please login/signup
             if not current_user:
                 print("Please login/signup first.")
 
-            #Or else it will go to the order menu function
+            #Else it will go to the order menu function
             else:
                 order_food(current_user, menu, orders)
         
@@ -233,11 +249,11 @@ def run():
             if not current_user:
                 print("Please login/signup first.")
 
-            #Or else it will do the view order function 
+            #Else it will do the view order function 
             else:
                 view_orders(current_user, menu, orders)
         
-        #Or else end the program
+        #Ends the Program
         elif choice == "6":
             print("Thank you for visiting us!")
             break
@@ -245,7 +261,6 @@ def run():
         #If anything else is pressed but option presented the it will say invalid choice, then do the run function
         else:
             print("Invalid choice, please try again.")
-
 
 
 #Runs the program
