@@ -1,0 +1,382 @@
+#ITERATION 1: CAFE MENU
+
+# SPECIFICATIONS: ||| 1. Login and Sign Up ||| 2. Menu ||| 3. Billing |||
+#Introduction to program
+#Offers choice to log in or create account.
+#Checks for correct Student ID and password in index data (list) 
+#Checks for age for new users and saves Student ID and password in a list.
+#Displays Café menu and asks for orders – items, quantity.
+#Displays invoice with details of items, quantity, price and total.
+
+
+
+
+#VARIABLES
+#Login/Signup Variables
+student_id = []
+password = []
+user = []
+users = []
+age = []
+
+#Main Program
+choice = 0
+current_user = []
+
+#Menu Variables
+hot_drinks = {"Hot chocolate": 4, "Latte": 4, "Mochaccino": 4, "Cuppaccino": 4, "Long black": 4, "Flat white": 4, "- GST per items above":"0.6\n\n"}
+cold_drinks ={"Milkshake": 5, "Thickshake": 5, "Icedcoffee": 5, "Icedtea": 5, "Icedchocolate": 5, "Softdrinks": 5,"- GST per item above": "0.75\n\n"}
+snacks ={"Donut": 3.5, "Hashbrown": 3.5,"Sandwiches":3.5,"Chips":3.5,"Salad":3.5,"- GST per item above": "0.53\n\n"}
+lunch = {"Hot dog": 7.5, "Burgers":7.5,"Wraps":5,"Steam buns":6,"Sushi":7,"Noodles":5,"Pies":4}
+menu = {}
+menu.update(hot_drinks)
+menu.update(cold_drinks)
+menu.update(snacks)
+menu.update(lunch)
+
+#Billing and Ordering Variables
+order = {}
+orders = []
+user_orders = []
+item = []
+price = []
+total = []
+quantity=[]
+
+
+
+#FUNCTIONS
+#---Adding Orders--#
+def add_order(user, order, orders):
+    orders.append((user, order))
+    #Adds the student ID password and age of user and adds the item they chose
+    #Orders is added the the variable orders
+
+#---Login in--#
+def login(users):
+    #Gets The user variable globally
+    global user
+
+
+    #Asks user for Student ID(Only can contain numbers) and password
+    try:
+        student_id = int(input("Enter Student ID: "))
+        password = input("Enter password: ")
+
+
+    except ValueError:
+        print("The Student ID has to only contain numbers")
+        student_id = int(input("Enter Student ID: "))
+
+
+
+    #if a user is already a member
+    for user in users:
+
+        #If student ID and password is correct for the user
+        if user[0] == student_id and user[1] == password:
+            print(f"Welcome back, {student_id}!")
+            return user
+
+
+    #If user is not a member
+    print("Invalid Student ID or password.")
+    return None
+
+
+#---Sign Up--#
+def signup(users):
+    #Import re to help create password requirements
+    import re
+
+
+    #First Try Function, For the whole function of Signup. Makes an except function for the age variable
+    try:
+
+        #Second try function for the Student ID to make sure that it can only be an integer
+        try:
+
+            #Asks User for Their Student ID
+            student_id = int(input("Enter Student ID: "))
+
+
+            #Makes sure that the user Student ID can only be 5 numbers long 
+            if student_id > 99999:
+                print("Student ID must only be 5 numbers long")
+                signup(users)
+            
+            elif student_id < 9999:
+                print("Student ID must only be 5 numbers long")
+                signup(users)
+
+            
+        #Student ID can only contains numbers, then returns them to the start of the signup function
+        except ValueError:
+            print("Student ID must be only numbers")
+            signup(users)
+
+
+        #Gives user information before creating a password
+        print("Password Must Contain 8 Characters, at least 1 Number, Capital Letter and Lowercase Letter")
+
+        #Password Function is to make sure password fits requirements needed
+        def Password ():
+            #Imports the global variable password
+            global password
+
+
+            #Asks user for password
+            password = input("Enter password: ")
+
+
+            #Password must be more than 8 characters long
+            if len(password) < 8:
+                print("Password Must be longer than 8 characters")
+                Password()
+            
+            #Password Must Contain A Number
+            elif re.search('[0-9]',password) is None:
+                print("Password Must Contain a Number")
+                Password()
+            
+            #Password Must Contain A Capital Letter
+            elif re.search('[A-Z]',password) is None:
+                print("Password Must Contain a Capital Letter")
+                Password()
+            
+            #Password Must Contain A Lowercase Letter
+            elif re.search('[a-z]' ,password) is None:
+                print("Password Must Contain a Lowercase Letter")
+                Password()
+
+            
+        #Starts Pasword Function
+        Password()
+
+
+        #Asks User For Age
+        age = int(input("Enter your age: "))
+
+
+        #If they are not an eligible
+        if age < 13:
+            print("Sorry, you must be 13 or older to create an account.")
+            return None
+        
+        #The user cannot be over 18 years old as they must be a school student for BDSC (yr 9 - yr13)
+        elif age > 18:
+            print("Sorry you must be a BDSC Student therefore you cannot be 18 years or older")
+            return None
+        
+
+        #if they are over 13 and under 21
+        #Adds the Student ID, password and age to the variable users.
+        user = (student_id, password, age)
+        users.append(user)
+        print(f"Account created for {student_id}!")
+        return user
+    
+    
+    #If There is Age is not a Number
+    except ValueError:
+        print("Please enter an appropriate answer for an age \n\n")
+        signup(users)
+
+
+#--Order Food--#
+def order_food(current_user, menu, orders):
+    
+    
+    # Makes Ssure Quantity Can Only Be A Number
+    try:
+
+        #Imports Order Variable
+        global order
+        order.clear()
+
+
+       #While the Order Is True it will keep repeating until False
+        while True:
+
+
+            #Prints out the Menu, the items and the price next to it
+            print("""
+            MENU:
+
+            Hot Drinks $4:
+            - Hot Chocolate 
+            - Latte         
+            - Mochaccino    
+            - Cuppaccino    
+            - Long black    
+            - Flat White
+
+
+            Cold Drinks $5:
+            - Milkshake
+            - Thickshake
+            - Iced Coffee
+            - Iced Tea
+            - Iced Chocolate
+            - Soft Drinks
+
+            
+            Snacks $3.50:
+            - Donut
+            - Hashbrown
+            - Sandwiches (gourmet)
+            - Salad
+            - Chips
+            
+
+            Lunch:
+            - HotDog $7.50
+            - Burger $7.50
+            - Wraps $5
+            - Steam Buns $6
+            - Sushi $7
+            - Noodles $5
+            - Pies $4
+            """)
+
+
+            # Asks user for item they would like to purchase
+            item = input("Enter item name (or 'done' to finish): ").capitalize()
+
+
+            #If the user inputs done, then it closes this and returns them to the run function
+            if item == "Done":
+                break
+
+            #If user inputs an item that is not in the list, then it returns them to order food function
+            if item not in menu:
+                print("Sorry, we don't have that item.")
+                continue
+
+
+            # Asks user for quantity of item they would like to purchase, and then adds the item to the order variable
+            quantity = int(input("Enter quantity: "))
+            order[item] = order.get(item, 0) + quantity
+
+
+        #Goes to the add order function
+        add_order(current_user, order, orders)
+        print("Order placed successfully!")
+
+
+    #If Quantity is Not A Number
+    except ValueError:
+        print("Please enter an appropriate answer for an quantity \n\n")
+        order_food(current_user, menu, orders)
+        
+
+#--View Order--#
+def view_orders(current_user, menu, orders):
+
+
+    # User order is item and quantity for the current user.
+    user_orders = [order for user, order in orders if user == current_user]
+
+
+    #if not in user order, then it returns to run function
+    if not user_orders:
+        print("No orders found for this user.")
+        return
+    
+
+    print("\nYour Orders:")
+
+
+    #prints out the number of order
+    
+        
+    print(f"\nOrder:")
+
+    #For number or items and quantities within the variable order, it then calculates the total price
+    for item, quantity in order.items():
+        price = menu[item]
+        total = price * quantity
+        print(f"{item} ${price} x {quantity} = ${total}")
+
+
+    #Prints the GST and total sum of all orders
+    print(f"GST Total: ${round(((sum(menu[item]*quantity for item, quantity in order.items())/100) * 15))}")
+    print(f"Total: ${round(sum(menu[item]*quantity for item, quantity in order.items()) * 1.15)}")
+        
+
+#--Main Program--#
+def run1():
+
+
+    #Defining Variables Needed
+    current_user = None
+    orders = []
+
+    #Introduces user
+    print("Welcome to our Cafe!")
+
+
+    #While True it will run until False
+    while True:
+
+        #If A User Is Not Signed In
+        if not current_user:
+
+            #Describes Options and asks user to enter choice they would like
+            print("\n1. Login\n2. Signup\n3. Exit")
+            choice = input("Enter choice: ")
+
+
+            #Login option
+            if choice == "1":
+                current_user = login(users)
+
+            #Sign Up option
+            elif choice == "2":
+                current_user = signup(users)
+
+            #Exit option
+            elif choice == "3":
+                #If their is no current user, then it will say please login/signup
+                print("Thank you Please Come Again")
+                exit()
+            
+            #If User Inputs Anything Other Thn Choices Available
+            else:
+                print("Invalid Choice, Please Try Again")
+
+
+        #If The User Is Signed in
+        if current_user != None: 
+
+            #Describes Options Present and then asks user to make choice
+            print("\n1. Sign Out\n2. Order Food\n3. View Order\n4. Exit")
+            choice = input("Enter choice: ")
+
+
+            #Sign Out Option
+            if choice == "1":
+                current_user = None
+                run1()
+            
+            #Order Food Option
+            elif choice == "2":
+                order_food(current_user, menu, orders)
+            
+            #Viewing Order option
+            elif choice == "3":
+                    view_orders(current_user, menu, orders)
+            
+            #Exit Option
+            elif choice == "4":
+                print("Thank you for using this program")
+                exit()
+            
+            #If User Inputs Anything Other Than Choices Available
+            else:
+                print("Invalid Choice, Try Again")
+        
+
+
+#Runs the program
+run1()
