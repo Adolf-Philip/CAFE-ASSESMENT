@@ -1,0 +1,453 @@
+#ITERATION 3: CAFE MENU
+
+# SPECIFICATIONS: ||| 1. Login and Sign Up ||| 2. Menu ||| 3. Billing |||
+#Introduction to program
+#Offers choice to log in or create account.
+#Checks for correct Student ID and password in index data (list) 
+#Checks for age for new users and saves Student ID and password in a list.
+#Displays Café menu and asks for orders – items, quantity.
+#Displays invoice with details of items, quantity, price and total.
+
+##############################################################################################################################
+
+from tkinter import *
+from tkinter import messagebox
+from PIL import Image, ImageTk
+
+#Login And Signup
+users = []
+user=[]
+
+#Menu Options/Items
+hot_drinks = {"Hot chocolate": 4, "Latte": 4, "Mochaccino": 4, "Cuppaccino": 4, "Long black": 4, "Flat white": 4, "- GST per items above":"0.6\n\n"}
+cold_drinks ={"Milkshake": 5, "Thickshake": 5, "Icedcoffee": 5, "Icedtea": 5, "Icedchocolate": 5, "Softdrinks": 5,"- GST per item above": "0.75\n\n"}
+snacks ={"Donut": 3.5, "Hashbrown": 3.5,"Sandwiches":3.5,"Chips":3.5,"Salad":3.5,"- GST per item above": "0.53\n\n"}
+lunch = {"Hot dog": 7.5, "Burgers":7.5,"Wraps":5,"Steam buns":6,"Sushi":7,"Noodles":5,"Pies":4}
+menu2 = {}
+menu2.update(hot_drinks)
+menu2.update(cold_drinks)
+menu2.update(snacks)
+menu2.update(lunch)
+
+#############################################################################################################################
+
+
+
+
+
+#############################################################################################################################
+
+#Login and Signup Function
+def loginandsignup():
+
+    #Creates A Window For Login and Signup Page
+    window = Tk()
+    window.title("Login and Signup Page")
+    window.geometry('300x200')
+    window.config(bg='white')
+
+
+    #Imports users and user variable to be used for later in the program
+    global users
+    global user
+
+#############################################################################################################################
+
+    #The Login Function
+    def login():
+
+        #Gets user from variables
+        global user
+
+
+#-------------------------------------------------------------------------------------------------------------------------------#
+        #Try and Except function for ValueError for if the student id doesnt contain numbers
+        try:
+
+            #Gets the entrybox answers for student ID(integer), Password(String) and Age(integer)
+            student_id = student_id_entry.get()
+            student_ids = int(student_id)
+
+            password = password_entry.get()
+
+            age = age_entry.get()
+            ages = int(age)
+
+        except ValueError:
+
+            #Presents Error Message stating that the Student ID can only contain numbers and then returns them to the main program
+            messagebox.showerror("Error","Student ID can only contain numbers")
+            return
+
+#---------------------------------------------------------------------------------------------------------------------------------#     
+
+        #if a user is already a member
+        for user in users:
+
+            #If student ID and password is correct for the user, then shows message showing validations are complete, destroys window and then transfers to main menu
+            if user[0] == student_ids and user[1] == password and user[2] == ages:
+                messagebox.showinfo("Welcome Back",f"Welcome Back {student_ids}!")
+                window.destroy()
+                menu()    
+
+
+        #If user is not a member then it prints and error message saying that the passw
+        messagebox.showerror("Error","Student ID or Password is incorrect")
+        return 
+    
+#---------------------------------------------------------------------------------------------------------------------------------#
+
+
+
+
+
+###########################################################################################################################################################
+
+    def signup():
+        #Import re to help create password requirements
+        import re
+
+
+#-----------------------------------------------------------------------------------------------------------------#
+
+        #Second try function for the Student ID to make sure that it can only be an integer
+        try:
+
+            #Gets users entry for Student ID by converting the student id entry into a variable
+            student_id = student_id_entry.get()
+            student_ids = int(student_id)
+
+            #Makes sure that the user Student ID can only be 5 numbers long 
+            if student_ids > 99999:
+                messagebox.showerror("Error Student ID","Student ID Must contain only 5 numbers")
+                return
+            
+            #If Student ID is less than 5 numbers long
+            elif student_ids <= 9999:
+                messagebox.showerror("Error Student ID","Student ID Must contain 5 numbers")
+                return
+            
+        #Student ID can only contains numbers, then returns them to the start
+        except ValueError:
+            messagebox.showerror("Error Student ID","Student ID Must only contain numbers")
+            return
+
+#-----------------------------------------------------------------------------------------------------------------#
+            
+        #Converts password entry to a variable
+        password = password_entry.get()
+
+
+        #Password must be more than 8 characters long
+        if len(password) < 8:
+            messagebox.showerror("Error in Password","Password Must longer than 8 characters")
+            return
+        
+        #Password Must Contain A Number
+        elif re.search('[0-9]',password) is None:
+            messagebox.showerror("Error in Password","Password Must Contain A Number")
+            return
+        
+        #Password Must Contain A Capital Letter
+        elif re.search('[A-Z]',password_entry.get()) is None:
+            messagebox.showerror("Error in Password","Password Must Contain A Capital Letter")
+            return
+        
+        #Password Must Contain A Lowercase Letter
+        elif re.search('[a-z]' ,password) is None:
+            messagebox.showerror("Error in Password","Password Must Contain A Lowercase Letter")
+            return
+
+#------------------------------------------------------------------------------------------------------------------#
+
+        try:
+            #Gets the age entry and then converts it to integer and into a variable
+            age = age_entry.get()
+            ages = int(age)
+
+
+            #If they are younger than 13 years old
+            if ages < 13:
+                messagebox.showerror("Error in Age","Sorry, you must be 13 or older to create an account.")
+                return 
+            
+            #The user cannot be over 18 years old as they must be a school student for BDSC (yr 9 - yr13)
+            elif ages > 18:
+                messagebox.showerror("Error in Age","Sorry you must be a BDSC Student therefore you cannot be 18 years or older")
+                return
+            
+        #If The Age is not a Number
+        except ValueError:
+            messagebox.showerror("Error in Age","Age Must Be a Number")
+            return
+            
+#-----------------------------------------------------------------------------------------------------------------#
+            
+        #Adds the Student ID, password and age to the variable users.
+        #They are then added to the total users
+        #Then they are transferred to the menu after completion
+        user = (student_ids,password, ages)
+        users.append(user)
+        messagebox.showinfo("Welcome",f"Welcome {student_ids}!")
+        window.destroy()
+        menu()
+    
+#-----------------------------------------------------------------------------------------------------------------#       
+
+
+
+
+
+###########################################################################################################################################
+
+    #Messagebox to discuss the password requirements when starting the program
+    messagebox.showinfo("Password Requirements","Password Must Contain:\n At Least 8 Characters \nAt least 1 Number \n1 Capital Letter \n1 Lowercase Letter")
+
+
+    #Labels
+    student_id_label = Label(window,text="Student Id:",font=('Microsoft Yahei UI Light', 12), bg='white', fg='black')
+    student_id_label.place(x=10, y=10)
+
+    password_label = Label(window,text="Password:",font=('Microsoft Yahei UI Light', 12), bg='white',fg='black')
+    password_label.place(x=10, y=50)
+
+    age_label = Label(window,text="Age:",font=('Microsoft Yahei UI Light', 12), bg='white',fg='black')
+    age_label.place(x=25, y=90)
+
+
+    #Entry Boxes
+    student_id_entry = Entry(window,font=('Microsoft Yahei UI Light', 12), bg='white', fg='black', width=20)
+    student_id_entry.place(x=100, y=10)
+
+    password_entry = Entry(window,font=('Microsoft Yahei UI Light', 12), bg='white', fg='black', width=20)
+    password_entry.place(x=100, y=50)
+
+    age_entry = Entry(window,font=('Microsoft Yahei UI Light', 12), bg='white', fg='black', width=20)
+    age_entry.place(x=100, y=90)
+
+
+    #Buttons
+    login_button = Button(window,text="Login",font=('Microsoft Yahei UI Light', 12), bg="light gray",fg='black',width=12,height=1,command=login)
+    login_button.place(x=15, y=140)
+
+    signup_button = Button(window,text="Sign up",font=('Microsoft Yahei UI Light', 12), bg="light gray",fg='black',width=12,height=1,command=signup)
+    signup_button.place(x=165, y=140)
+
+
+
+
+
+    #Runs the program
+    window.mainloop()
+
+#############################################################################################################################
+
+
+    
+    
+
+#############################################################################################################################
+
+#Menu Function
+def menu ():
+
+    #Starts the root for the Menu
+    root = Tk()
+    root.state("zoomed")
+    root.title("Menu")
+    root.geometry('1800x875')
+
+############################################################################################################################
+
+    #Signout Function, It destroys the root and then transfers them to the login and signup function
+    def signout():
+
+        root.destroy()
+        loginandsignup()
+
+
+    #If checkout Button is pressed then it transfers them to the checkout function
+    def checkout_entry ():
+
+        root.destroy()
+        checkout()
+
+#######################################################################################################################
+#--------------------------------------------------------------------------------------------------------------------------------#
+    # Opens the Image
+    image = Image.open("Menutwo.png")
+
+    # Resize the image using resize() method
+    resize_image = image.resize((1800, 850))
+    img = ImageTk.PhotoImage(resize_image)
+
+    # Create label and add the resized image
+    label1 = Label(root,image=img)
+    label1.image = img
+    label1.pack()
+#-------------------------------------------------------------------------------------------------------------------------------#
+
+    #Creates the button for Signing Out
+    sign_out_button = Button(root,width=20,height=2,text="Sign Out", font=('Microsoft Yahei UI Light',12), fg = 'black',bg='gray',command=signout)
+    sign_out_button.place(x=10,y=10)
+
+    #Creates the button for proceeding to checkout
+    checkout_button = Button(root,text="Checkout",fg='black',bg='gray',font=('Microsoft Yahei UI Light',12),width=20,height=2,command=checkout_entry)
+    checkout_button.place(x=1500,y=10)
+
+#---------------------------------------------------------------------------------------------------------------------------------#
+
+
+
+
+
+    #Runs the Menu
+    root.mainloop()
+
+#############################################################################################################################
+
+
+
+
+
+
+#############################################################################################################################
+
+#Checkout Function
+def checkout ():
+
+    #Creates a window for the Checkout
+    window = Tk()
+    window.title("Checkout")
+    window.geometry('500x350')
+    window.config(bg='white')
+
+
+    #Gets the variable order an i
+    global order
+    global i
+    order={}
+    i=-1
+    
+    #Menu Variables
+    hot_drinks = {"Hot chocolate $5": 5, "Coffee $5": 5,"Tea $5": 5}
+    cold_drinks ={"Soft Drink $4": 4, "Ginger Beer $3.50": 3.50, "Iced Drinks $5": 5,"Milkshake $5": 5}
+    snacks ={"Potato Wedges $4":4,"Pies $4":4,"Greek Salad $5":5,"Sandwiches $5":5}
+    special = {"Nachos $8":8,"Chicken Burger $7.50": 7.50,"Sushi $8": 8,"Pizza $8": 8}
+    lunch = {"Noodles $7":8,"Steam Buns $7":7,"Meatball Sub $7":7,"Wraps $7.50":7.50,"Hot Dog $8":8}
+    menu = {}
+    menu.update(hot_drinks)
+    menu.update(cold_drinks)
+    menu.update(snacks)
+    menu.update(special)
+    menu.update(lunch)
+
+
+######################################################################################################################
+
+    def add_order():
+        
+        #Converts quantity entry into an integer and makes sure that it can only be a whole number
+        try:
+
+            quantity = int(quantity_entrybox.get())
+
+        except ValueError:
+            messagebox.showerror("Quantity Error","Quantity must be a whole number")
+        
+        #Converts their option chosen into a variable (item) and makes sure that it is an appropriate item
+        item = Menu1.get()
+
+        if item == "Menu":
+            messagebox.showerror("Item Error","Menu is not an item, please choose an appropriate item within the menu")
+            return
+        
+        #Make Orders into nothing and then gets orders item and quantity 
+        orders = []
+        order[item] = order.get(item,0) + quantity
+        
+        #It then adds all the order information to the specific user
+        orders.append((user, order))
+
+        #When complete displays a message saying order is placed
+        messagebox.showinfo("Order Complete","Order Placed Succefully")
+
+###################################################################################################
+        
+    def view_order():
+
+        #Gets orders and i
+        global order
+        global i
+        
+
+        #For each item and quantity in order
+        for item, quantity in order.items():
+
+            #I increses by 1, therefore changing the view order label row by 1
+            i+=1
+
+            #Gets the price for certain item chosen and also creates a total by multiplying price by quantity
+            price = menu[item]
+            total = price * quantity
+
+            #Makes a Label displaying the item, quantity and total placed within the view order frame
+            view_order_label = Label(view_order_frame,text=(f"{item} x {quantity} = ${total}"),fg='black',bg='gray',font=('Microsoft Yahei UI Light',12))
+            view_order_label.grid(row=i,column=0)
+
+
+        #Displays the receipt showing the GST Total and the Total amount owed
+        messagebox.showinfo("Receipt",f"GST Total = ${round(((sum(menu[item]*quantity for item,quantity in order.items())/100) * 15))} \n Total: ${round(sum(menu[item]*quantity for item, quantity in order.items()) * 1.15)}") 
+    
+############################################################################################################
+    #-----------------------------------------------------------------------------#
+    #Creates the view order frame that displays items, price and quantity when viewing order 
+    view_order_frame = Frame(window,bg='gray',width=480,height=200)
+    view_order_frame.grid(row=0,column=0,padx=10,sticky=NSEW)
+    view_order_frame.grid_propagate(0)
+
+
+    #labels
+    item_chosen_label = Label(window,text="Item Chosen:",bg='white',fg='black',font=('Microsoft Yahei UI Light',12))
+    item_chosen_label.place(x=10,y=250)
+
+    quantity_chosen_label = Label(window,text="Quantity: ",bg='white',fg='black',font=('Microsoft Yahei UI Light',12))
+    quantity_chosen_label.place(x=280,y=250)
+
+
+    #Entry Box for Quantity
+    quantity_entrybox = Entry(window,bg='white',fg='black',font=('Microsoft Yahei UI Light',12), width =10)
+    quantity_entrybox.place(x=360,y=250)
+
+
+    #Drop Down Box for when user has to select order
+    Menu1 = StringVar()
+    Menu1.set("Menu")
+
+    item_chosen = OptionMenu(window,Menu1,*menu)
+    item_chosen.place(x=120,y=250)
+
+
+    #Buttons (Add order and View Order)
+    add_order_button = Button(window,text="Add To Order",fg="black",bg='orange',font=('Microsoft Yahei UI Light',12), width = 25, height=1,command=add_order)
+    add_order_button.place(x=10,y=300)
+
+    view_order_button = Button(window,text="View Order",fg="black",bg="light green",font=('Microsoft Yahei UI Light',12),width=25, height=1,command=view_order)
+    view_order_button.place(x=255,y=300)
+    
+#-----------------------------------------------------------------------------------------------------
+ 
+    
+
+
+
+    #Runs the program
+    window.mainloop()
+
+##########################################################
+
+
+
+
+#Runs the login and signup function
+loginandsignup()
