@@ -323,13 +323,13 @@ def checkout ():
     window.config(bg='white')
 
 
-    #Gets the variable order an i
+    #Gets all variables that are needed
     global order
     global i
     order={}
     i=-1
     
-    #Menu Variables
+    #Menu Dictionary
     hot_drinks = {"Hot chocolate $5": 5, "Coffee $5": 5,"Tea $5": 5}
     cold_drinks ={"Soft Drink $4": 4, "Ginger Beer $3.50": 3.50, "Iced Drinks $5": 5,"Milkshake $5": 5}
     snacks ={"Potato Wedges $4":4,"Pies $4":4,"Greek Salad $5":5,"Sandwiches $5":5}
@@ -354,6 +354,7 @@ def checkout ():
 
         except ValueError:
             messagebox.showerror("Quantity Error","Quantity must be a whole number")
+            return
         
         #Converts their option chosen into a variable (item) and makes sure that it is an appropriate item
         item = Menu1.get()
@@ -392,53 +393,66 @@ def checkout ():
             total = price * quantity
 
             #Makes a Label displaying the item, quantity and total placed within the view order frame
-            view_order_label = Label(view_order_frame,text=(f"{item} x {quantity} = ${total}"),fg='black',bg='gray',font=('Microsoft Yahei UI Light',12))
+            view_order_label = Label(view_order_frame,text=(f"--------------------------- \n {item} x {quantity} = ${total}"),fg='black',bg='gray',font=('Microsoft Yahei UI Light',12))
             view_order_label.grid(row=i,column=0)
 
 
         #Displays the receipt showing the GST Total and the Total amount owed
-        messagebox.showinfo("Receipt",f"GST Total = ${round(((sum(menu[item]*quantity for item,quantity in order.items())/100) * 15))} \n Total: ${round(sum(menu[item]*quantity for item, quantity in order.items()) * 1.15)}") 
+        messagebox.showinfo("Receipt",f"GST Total = ${((sum(menu[item]*quantity for item,quantity in order.items())/100) * 15)} \n Total: ${round(sum(menu[item]*quantity for item, quantity in order.items()))}") 
     
-############################################################################################################
-    #-----------------------------------------------------------------------------#
+
+
+    ############################################### VISUAL DISPLAY #############################################################
+
+    #---------------------------------------------------- Frames--------------------------------------------#
+    
     #Creates the view order frame that displays items, price and quantity when viewing order 
     view_order_frame = Frame(window,bg='gray',width=480,height=200)
     view_order_frame.grid(row=0,column=0,padx=10,sticky=NSEW)
     view_order_frame.grid_propagate(0)
 
 
-    #labels
+    #-------------------------------------------------Labels-------------------------------------------------#
+
+    #Item Chosen Label
     item_chosen_label = Label(window,text="Item Chosen:",bg='white',fg='black',font=('Microsoft Yahei UI Light',12))
     item_chosen_label.place(x=10,y=250)
 
+    #Quantity Label
     quantity_chosen_label = Label(window,text="Quantity: ",bg='white',fg='black',font=('Microsoft Yahei UI Light',12))
     quantity_chosen_label.place(x=280,y=250)
 
 
-    #Entry Box for Quantity
+    #--------------------------------------------------Entry Boxes ----------------------------------------#
+
+    #Quantity entrybox
     quantity_entrybox = Entry(window,bg='white',fg='black',font=('Microsoft Yahei UI Light',12), width =10)
     quantity_entrybox.place(x=360,y=250)
 
 
-    #Drop Down Box for when user has to select order
+    #-------------------------------------------------- Drop Down Box --------------------------------------------#
+
+    #Gets items from dictionary
     Menu1 = StringVar()
     Menu1.set("Menu")
 
+    #Displays items in dropbox form
     item_chosen = OptionMenu(window,Menu1,*menu)
     item_chosen.place(x=120,y=250)
 
 
-    #Buttons (Add order and View Order)
+    #---------------------------------------------------- Buttons -----------------------------------------------------#
+
+    #Add order Button
     add_order_button = Button(window,text="Add To Order",fg="black",bg='orange',font=('Microsoft Yahei UI Light',12), width = 25, height=1,command=add_order)
     add_order_button.place(x=10,y=300)
 
+    #View order Button
     view_order_button = Button(window,text="View Order",fg="black",bg="light green",font=('Microsoft Yahei UI Light',12),width=25, height=1,command=view_order)
     view_order_button.place(x=255,y=300)
-    
-#-----------------------------------------------------------------------------------------------------
- 
-    
 
+
+    
 
 
     #Runs the program
