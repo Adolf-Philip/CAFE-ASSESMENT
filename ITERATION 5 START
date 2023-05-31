@@ -1,0 +1,2 @@
+#Starts the program by immediately sending them to Login and Signup Page
+from ITERATION_5_LOGIN_AND_SIGNUP_PAGE import *
