@@ -1,0 +1,8 @@
+from tkinter import *
+from tkinter import messagebox
+from ITERATION_4_LOGINANDSIGNUP import *
+from ITERATION_4_LOGINANDSIGNUP import login_page
+
+#Stars the user with Login Page
+login_page ()
+#Then Transitions them to the Menu
