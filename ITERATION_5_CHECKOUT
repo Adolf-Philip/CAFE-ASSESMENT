@@ -1,0 +1,215 @@
+#imports All necessary modules
+from tkinter import *
+from tkinter import messagebox
+
+
+####################################FUNCTIONS#########################################
+
+#The Main Checkout Function
+def checkout():
+
+    #Creates a root for the Checkout
+    root = Tk()
+    root.title("Checkout")
+    root.geometry('500x400')
+    root.config(bg='white')
+    root.resizable(FALSE,FALSE)
+
+    #Makes All Variables global for later user
+    global order
+    global i
+    global orders
+    quantity = 0
+    order={}
+    orders = []
+    i=1
+    
+
+    #Menu Dictionary
+    hot_drinks = {"Hot chocolate $5": 5, "Coffee $5": 5,"Tea $5": 5}
+    cold_drinks ={"Soft Drink $4": 4, "Ginger Beer $3.50": 3.50, "Iced Drinks $5": 5,"Milkshake $5": 5}
+    snacks ={"Potato Wedges $4":4,"Pies $4":4,"Greek Salad $5":5,"Sandwiches $5":5}
+    special = {"Nachos $8":8,"Chicken Burger $7.50": 7.50,"Sushi $8": 8,"Pizza $8": 8}
+    lunch = {"Noodles $7":8,"Steam Buns $7":7,"Meatball Sub $7":7,"Wraps $7.50":7.50,"Hot Dog $8":8}
+    menu = {}
+    menu.update(hot_drinks)
+    menu.update(cold_drinks)
+    menu.update(snacks)
+    menu.update(special)
+    menu.update(lunch)
+
+
+    #--------------------------------------- Adding an Order Function ------------------------------------#
+
+    def add_order():
+
+        #Gets Variables in user
+        global order
+        global i
+        global quantity
+
+
+        #Checks if the user has exceeded maximum order amount
+        if i > 6:
+
+            messagebox.showerror("Error","You cannot order more than 6 items at a time")
+        
+
+        #Converts quantity entry into an integer and makes sure that it can only be a whole number
+        try:
+            quantity = int(quantity_entrybox.get()) 
+
+            if quantity <= 0 or quantity > 10:
+                messagebox.showerror("Error","That is not a suppliable amount (Quantity cannot be less or equal to 0 and Quantity cannot be more than 10)")
+                return
+
+        except ValueError:
+            messagebox.showerror("Quantity Error","Quantity must be a whole number")
+            return
+        
+
+        #Converts their option chosen into a variable (item) and makes sure that it is an appropriate item
+        item = Menu1.get()
+
+        if item == "Menu":
+            messagebox.showerror("Item Error","Menu is not an item, please choose an appropriate item within the menu")
+            return
+        
+
+        #Make Order gets orders item and quantity 
+        order[item] = order.get(item,0) + quantity
+        
+
+        #It then adds all the order information to the specific user
+        orders.append(order)
+
+
+        #When complete displays a message saying order is placed
+        messagebox.showinfo("Order Complete","Order Placed Succefully")
+
+        
+        #It clears the Frame of all past Variables
+        for label in view_order_frame.grid_slaves():
+            label.destroy()
+        
+
+        #I is decreased by 1 so that items displayed starts at 0
+        i-=1
+
+        #Return Back To Menu Button
+        return_back_button = Button(view_order_frame,text="Back",fg="black",bg="light gray",font=('Microsoft Yahei UI Light',12),width=5,command=return_back)
+        return_back_button.grid(row=0,column=0, sticky=NSEW)
+
+        #For each item and quantity in order
+        for item, quantity in order.items():
+
+            #I increses by 1, therefore changing the view order label row by 1
+            i+=1
+
+            #Gets the price for certain item chosen and also creates a total by multiplying price by quantity
+            price = menu[item]
+            total = price * quantity
+
+            #Makes a Label displaying the item, quantity and total placed within the view order frame
+            view_order_label = Label(view_order_frame,text=(f"{item} x {quantity} = ${total}"),fg='black',bg='gray',font=('Microsoft Yahei UI Light',12))
+            view_order_label.grid(row=i,column=0)
+
+            
+
+
+    #--------------------------------------- Edit Order Function ----------------------------------------#
+        
+    def edit_item():
+
+        #Gets all necessary variables needed
+        global order
+        item = Menu1.get()
+
+        #if Item is in order then it removes the original and updates it with quantity amount
+        if item in order:
+            order.pop(item,0)
+            add_order()
+
+
+#------------------------------------------------ Finish Order ------------------------------------------------#
+    def finish_order():
+
+        #Displays the receipt showing the GST Total and the Total amount owed, it then ends the program
+        messagebox.showinfo("Receipt",f" Issue number: {i} \n Date of Purchase: 1 June 2023 \n \n GST Total = ${((sum(menu[item]*quantity for item,quantity in order.items())/100) * 15)} \n Grand Total: ${round(sum(menu[item]*quantity for item, quantity in order.items()))} \n\n Thank You For Using FuseCafe") 
+        exit()
+
+
+#------------------------------------------------ Return Back To Menu ---------------------------------------------#
+    def return_back():
+
+
+        #Destroys root and then returns them back to menu
+        root.destroy() 
+        from ITERATION_5_MENU import menu
+        menu()
+
+
+        
+    ################################################## DISPLAY ##########################################################
+
+    #------------------------------------------------------ Frame ---------------------------------------#
+
+    #Creates the view order frame that displays items, price and quantity when viewing order 
+    view_order_frame = Frame(root,bg='gray',width=480,height=200)
+    view_order_frame.grid(row=0,column=0,padx=10,sticky=NSEW)
+    view_order_frame.grid_propagate(0)
+
+
+    #------------------------------------------------- Labels ----------------------------------------------#
+
+    #Item Chosen Label
+    item_chosen_label = Label(root,text="Item Chosen:",bg='white',fg='black',font=('Microsoft Yahei UI Light',12))
+    item_chosen_label.place(x=10,y=250)
+
+    #Quantity Chosen Label
+    quantity_chosen_label = Label(root,text="Quantity: ",bg='white',fg='black',font=('Microsoft Yahei UI Light',12))
+    quantity_chosen_label.place(x=280,y=250)
+
+
+    #-------------------------------------------------- Entry Boxes -----------------------------------------#
+
+    #Quantity Entrybox
+    quantity_entrybox = Entry(root,bg='white',fg='black',font=('Microsoft Yahei UI Light',12), width =10)
+    quantity_entrybox.place(x=360,y=250)
+
+
+    #--------------------------------------------------- Drop Down Box -------------------------------------#
+
+    #Gets items from Dictionary
+    Menu1 = StringVar()
+    Menu1.set("Menu")
+
+    #Displays items in form of drop down box
+    item_chosen = OptionMenu(root,Menu1,*menu)
+    item_chosen.place(x=120,y=250)
+
+
+    #--------------------------------------------------- Buttons ------------------------------------------------#
+    
+    #Add order button
+    add_order_button = Button(root,text="Add To Order",fg="black",bg='light blue',font=('Microsoft Yahei UI Light',12), width = 25, height=1,command=add_order)
+    add_order_button.place(x=10,y=300)
+
+    #Edit item Button
+    edit_item_button = Button(root,text="Edit Item",fg="black",bg="orange",font=('Microsoft Yahei UI Light',12),width=25, height=1,command=edit_item)
+    edit_item_button.place(x=255,y=300)
+
+    #Finish Order Button
+    finish_order_button = Button(root,text="Finish Order",fg='black',bg='light green',font=('Microsoft Yahei UI Light',12), width = 52 ,height=1,command=finish_order)
+    finish_order_button.place(x=10,y=350)
+
+    #Return Back To Menu Button
+    return_back_button = Button(view_order_frame,text="Back",fg="black",bg="light gray",font=('Microsoft Yahei UI Light',12),width=5,command=return_back)
+    return_back_button.grid(row=0,column=0)
+
+    
+
+    #######################ENDS CHECKOUT #######################################
+    #Runs the program
+    root.mainloop()
+
