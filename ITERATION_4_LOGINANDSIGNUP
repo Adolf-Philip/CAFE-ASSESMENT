@@ -1,0 +1,292 @@
+from tkinter import *
+from tkinter import messagebox
+
+#VARIABLES
+student_ids = ['']
+student_passwords = ['']
+
+def menu ():
+    from MENU import menu
+    menu()
+
+def login_page ():
+    #############################LOGIN PAGE##################################
+
+    window = Tk()
+    window.title('Login Page')
+    window.geometry('925x500+300+200')
+    window.configure(bg='white')
+    window.resizable=(False,False)
+
+
+
+
+
+
+    ############################FUNCTIONS#######################################
+    #-----------------------Check if User is within the list-------------------#
+    def user_check ():
+        #Getting Lists
+        global student_ids
+        global student_passwords
+
+        #Checks if Student Id in the student_ids List and Student Password in student_password list
+        if user.get() in student_ids and code.get() in student_passwords:
+            messagebox.showinfo(title='',message='Welcome Back')
+            window.destroy()
+            menu()
+            
+        
+        #If user doesnt input Anything
+        elif user.get() == "" or code.get() == "":
+            messagebox.showerror(title='Error',message='Please fill in all fields')
+        
+        #If Password or Student ID is wrong
+        else:
+            messagebox.showerror(title='Error',message='Invalid Student ID or Passwrd')
+
+
+
+    def sign_up_button ():
+        #If signup Button is Pressed
+        window.destroy()
+        signup()
+
+    ###################################################################################################
+
+
+
+
+
+    #############################################VISIBLE CHANGES#######################################
+
+    #----------------------------------------Images --------------------------------#
+    img = PhotoImage(file='login.png')
+    Label(window, image=img, bg='white').place(x=50, y=50)
+            
+    #--------------------Frame-------------------------#
+
+    #Creates a Invisible Frame Within the Window for The Information 
+    frame=Frame(window,width=350,height=350,bg="white") 
+    frame.place(x=480,y=70)
+
+    #Creates a Small Black Line Underneath the entry boxes for Student ID and Password
+    Frame(frame,width=295,height=2,bg='black').place(x=25,y=107) 
+    Frame(frame,width=295,height=2,bg='black').place(x=25,y=177) 
+
+
+
+    #--------------------Headings----------------------#
+
+    #Creates a label For the Main Header ('Sign Up') with a light blue colour (#57a1f8) and bold placed within the information frame
+    heading=Label(frame,text='Sign in',fg='#57a1f8',bg='white',font=('Microsoft YaHei UI Light',23,'bold'))
+    heading.place(x=100,y=5)
+
+
+
+    #-------------------Labels--------------------------#
+
+    #Creates a Label displaying the informatuon of when they should sign up, with a small text and black colour placed underneath the password entry box
+    label=Label(frame,text="Don't have an account?",fg='black',bg='white',font=('Microsoft YaHei UI Light',9))
+    label.place(x=75,y=270)
+
+
+
+    #----------------------Buttons----------------------#
+
+    #Creates and Button for when completed they need to sign up
+    Button(frame,width=39,pady=7,text='Sign in',bg='#57a1f8',fg='white',border=0,command=user_check).place(x=35,y=204)
+
+    #Creates a Button for when they need to sign up
+    sign_up= Button(frame,width=6,text='Sign up',border=0,bg='white',cursor='hand2',fg='#57a1f8',command=sign_up_button)
+    sign_up.place(x=215,y=270)
+
+
+
+    #------------------------Entry Boxes----------------#
+
+    #------------------------Student Id-------------------#
+
+    #Creates an Entry Box for where the user can input their student id
+    user = Entry(frame,width=25,fg='black',border=0,bg="white",font=('Microsoft YaHei UI Light',11))
+    user.place(x=30,y=80)
+    user.insert(0,'Student ID')
+
+
+
+    #------------------------Password-------------------#
+
+    #Creates an Entry Box for where the user can input ther password
+    code = Entry(frame,width=25,fg='black',border=0,bg="white",font=('Microsoft YaHei UI Light',11))
+    code.place(x=30,y=150)
+    code.insert(0,'Password')
+
+    ###########################################################################################################
+
+
+
+
+
+    #-----------------------End Of SignUp Page----------#
+    #Ends the Program
+    window.mainloop()
+
+
+
+    #####################################################
+
+
+
+
+def signup():
+    screen = Tk()
+    screen.title('Sign Up Page')
+    screen.geometry('925x500+300+200')
+    screen.configure(bg='white')
+    screen.resizable(False,False)
+
+
+    ##########################FUNCTIONS############################################
+    def User_Add ():
+
+        #Grabs Lists
+        global student_ids
+        global student_passwords
+
+
+        #Adds the Student Id and Password and stores them in the list, then returns them to login page
+
+        #Checking Student ID
+        try:
+            #If Student Id doesnt contain 5 numbers
+            if int(user.get()) < 9999 or int(user.get()) > 99999:
+                messagebox.showerror(title="Error",message="Student ID must only contain 5 numbers")
+                return
+        
+        #If The Student Id entry is not a Number
+        except ValueError:
+            messagebox.showerror(title="Error",message="Student ID Must only numbers")
+            return
+        
+
+        #Checking Password Before Entering
+        #imports pass reqs
+        import re
+
+        if len(code.get()) < 8:
+            messagebox.showerror(title="Error",message="Password Must be 8 character or more")
+            return
+        
+        #Password Must Contain A Number
+        elif re.search('[0-9]',code.get()) is None:
+            messagebox.showerror("Error in Password","Password Must Contain A Number")
+            return
+            
+        
+        #Password Must Contain A Capital Letter
+        elif re.search('[A-Z]',code.get()) is None:
+            messagebox.showerror("Error in Password","Password Must Contain A Capital Letter")
+            return
+            
+        
+        #Password Must Contain A Lowercase Letter
+        elif re.search('[a-z]' ,code.get()) is None:
+            messagebox.showerror("Error in Password","Password Must Contain A Lowercase Letter")
+            return
+
+        #If Confirm Password is not the same as Password, ten prints error
+        
+        if confirm_code.get() != code.get():
+            messagebox.showerror(title="Error",message="The Confirm Password is not the same as the Password Given")
+            return
+        
+        elif user.get() == "" or code.get() == "" or confirm_code.get() == "":
+            messagebox.showerror(title="Error",message="Please Make Sure To Enter All Fields")
+            return
+
+
+        #If Everything Checks Out, it adds student id to student ids and adds passwords to student_passwords
+        else:
+            student_ids.append(user.get())
+            student_passwords.append(code.get())
+            messagebox.showinfo(title= "Complete", message="Completed SignUp")
+            screen.destroy()
+            login_page ()
+    
+    
+
+
+    #Destroys the screen and then runs the login page
+    def destroy ():
+        screen.destroy()
+        login_page()
+            
+
+
+
+
+    ###########################VISIBLE CONTENT######################################
+
+    #---------------------------- Images -------------------------------#
+    img = PhotoImage(file='signuppage.png')
+    Label(screen, image=img, border=0, bg='white').place(x=50, y=100)
+
+
+    
+    #--------------------------Frames------------------------#
+    #Frame For Information
+    frame=Frame(screen,width=350,height=390,bg='#fff')
+    frame.place(x=480,y=50)
+
+    #Small Frame underneath entry boxes For Student ID, Password and Confirm Password
+    Frame(frame,width=295,height=2,bg='black').place(x=25,y=107)
+    Frame(frame,width=295,height=2,bg='black').place(x=25,y=177)
+    Frame(frame,width=295,height=2,bg='black').place(x=25,y=247)
+
+
+    #----------------------Headings----------------------------------#
+    #Creates A Large Text For The Sign Up Page
+    heading=Label(frame,text='Sign up',fg="#57a1f8",bg='white',font=('Microsoft Yahei UI Light',23,'bold'))
+    heading.place(x=100,y=5)
+
+
+
+    #---------------------Labels--------------------------------------------#
+    #Has a Small Label at the bottom for if they have an account
+    label=Label(frame,text='I have an account',fg='black',bg='white',font=('Microsoft YaHei UI Light',9))
+    label.place(x=90,y=340)
+
+
+
+    #------------------------Buttons----------------------------------------#
+    #Creates A Button For when they finish the 
+    Button(frame,width=39,pady=7,text='Sign up',bg='#57a1f8',fg='white',border=0,command=User_Add).place(x=35,y=280)
+    signin=Button(frame,width=6,text='Sign in',border=0,bg='white',cursor='hand2',fg='#57a1f8',command=destroy)
+    signin.place(x=200,y=340)
+
+    
+
+    #--------------------------------------------Student ID------------------------------------------------------#
+    user = Entry(frame,width=25,fg='black',border=0,bg='white',font=('Microsoft YaHei UI Light',11))
+    user.place(x=30,y=80)
+    user.insert(0, 'Student ID')
+    
+
+    #--------------------------------------------PASSWORD-------------------------------------------------------#
+
+    code = Entry(frame,width=25,fg='black',border=0,bg='white',font=('Microsoft YaHei UI Light',11))
+    code.place(x=30,y=150)
+    code.insert(0, 'Password')
+    
+
+
+    #-------------------------------------------CONFIRM PASSWORD---------------------------------------------------#
+
+    confirm_code = Entry(frame,width=25,fg='black',border=0,bg='white',font=('Microsoft YaHei UI Light',11))
+    confirm_code.place(x=30,y=220)
+    confirm_code.insert(0, 'Confirm Password')
+
+
+    #-----------------------------End Program--------------------------#
+    screen.mainloop()
+
