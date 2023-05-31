@@ -161,6 +161,7 @@ def checkout():
 
     ########################################################## END OF CHECKOUT FUNCTION ###########################################
 
+
     #Runs the program
     window.mainloop()
 
