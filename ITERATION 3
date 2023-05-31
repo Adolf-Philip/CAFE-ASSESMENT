@@ -346,7 +346,7 @@ def checkout ():
 ######################################################################################################################
 
     def add_order():
-        
+
         #Converts quantity entry into an integer and makes sure that it can only be a whole number
         try:
 
@@ -384,7 +384,10 @@ def checkout ():
 
         #For each item and quantity in order
         for item, quantity in order.items():
-
+            
+            if i > 5:
+                messagebox.showerror("Error","You have exceeded the maximum amount of orders")
+                return
             #I increses by 1, therefore changing the view order label row by 1
             i+=1
 
@@ -393,7 +396,7 @@ def checkout ():
             total = price * quantity
 
             #Makes a Label displaying the item, quantity and total placed within the view order frame
-            view_order_label = Label(view_order_frame,text=(f"--------------------------- \n {item} x {quantity} = ${total}"),fg='black',bg='gray',font=('Microsoft Yahei UI Light',12))
+            view_order_label = Label(view_order_frame,text=(f" {item} x {quantity} = ${total}"),fg='black',bg='gray',font=('Microsoft Yahei UI Light',12))
             view_order_label.grid(row=i,column=0)
 
 
