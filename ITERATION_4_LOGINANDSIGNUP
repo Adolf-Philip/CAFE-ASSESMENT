@@ -34,6 +34,7 @@ def login_page ():
         if user.get() in student_ids and code.get() in student_passwords:
             messagebox.showinfo(title='',message='Welcome Back')
             window.destroy()
+            from ITERATION_4_MENU import menu
             menu()
             
         
