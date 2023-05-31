@@ -1,0 +1,58 @@
+from tkinter import *
+from tkinter import messagebox
+from PIL import Image, ImageTk
+from ITERATION_4_LOGINANDSIGNUP import login_page
+
+def menu ():
+    root = Tk()
+    root.title("Menu")
+    root.geometry('1800x875')
+
+
+    ##############################FUNCTIONS##########################
+
+    #Destroys the window and returns them to the login page
+    def sign_out ():
+        root.destroy()
+        login_page()
+
+    #If checkout Button is pressed then it transfers them to the checkout function
+    def checkout ():
+        root.destroy()
+        from ITERATION_4_CHECKOUT import checkout
+        checkout()
+
+    
+        
+    ###############################################IMAGE#####################################
+    
+    # Opens the Image
+    image = Image.open("Menutwo.png")
+
+    # Resize the image using resize() method
+    resize_image = image.resize((1800, 850))
+    img = ImageTk.PhotoImage(resize_image)
+
+    # Create label and add the resized image
+    label1 = Label(root,image=img)
+    label1.image = img
+    label1.pack()
+
+
+
+
+    ##############################BUTTONS#############################
+    #Creates the button for Signing Out
+    sign_out_button = Button(root,width=20,height=2,text="Sign Out", font=('Microsoft Yahei UI Light',12), fg = 'black',bg='gray',command=sign_out)
+    sign_out_button.place(x=10,y=10)
+
+    #Creates the button for proceeding to checkout
+    checkout_button = Button(root,text="Checkout",fg='black',bg='gray',font=('Microsoft Yahei UI Light',12),width=20,height=2,command=checkout)
+    checkout_button.place(x=1500,y=10)
+
+
+
+
+    root.mainloop()
+
+
