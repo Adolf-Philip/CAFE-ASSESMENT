@@ -1,0 +1,70 @@
+#import all necessary modules
+from tkinter import *
+from tkinter import messagebox
+from PIL import Image, ImageTk
+
+
+##############################FUNCTIONS##########################
+
+#Creates a function that displays the menu
+def menu ():
+
+    root = Tk()
+    root.title("Menu")
+    root.geometry('1800x875')
+    root.state('zoomed')
+
+
+    #-------------------------------------Sign out Function ---------------------------#
+    #Destroys the window and returns them to the login page
+    def sign_out ():
+        root.destroy()
+        from ITERATION_5_LOGIN_AND_SIGNUP_PAGE import login_page
+        login_page()
+
+
+#-------------------------------------Checkout Function ---------------------------#
+    #If checkout Button is pressed then it transfers them to the checkout function
+    def checkout ():
+        root.destroy()
+        from ITERATION_5_CHECKOUT import checkout
+        checkout()
+
+
+#-------------------------------------Placing Entries-----------------------------#
+    def create_entry(root, x, y):
+        entry = Entry(root, text="", width=2, font=("Helvetica", 12, 'bold'), bg='light gray', fg='black')
+        entry.place(x=x, y=y)
+        return entry
+    
+        
+    ###############################################IMAGE#####################################
+    
+    # Opens the Image
+    image = Image.open("FinalMenu.png")
+
+    # Resize the image using resize() method
+    resize_image = image.resize((1800, 900))
+    img = ImageTk.PhotoImage(resize_image)
+
+    # Create label and add the resized image
+    label1 = Label(root,image=img)
+    label1.image = img
+    label1.pack()
+
+
+
+    ##############################BUTTONS#############################
+    #Creates the button for Signing Out
+    sign_out_button = Button(root,width=10,height=2,text="Sign Out", font=('Microsoft Yahei UI Light',12,'bold'), fg = 'black',bg='gray',command=sign_out)
+    sign_out_button.place(x=0,y=0)
+
+    #Creates the button for proceeding to checkout
+    checkout_button = Button(root,text="Checkout",fg='black',bg='gray',font=('Microsoft Yahei UI Light',12,'bold'),width=10,height=2,command=checkout)
+    checkout_button.place(x=1600,y=0)
+
+
+    #######################ENDS MENU #######################################
+    root.mainloop()
+
+
